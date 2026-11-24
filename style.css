@@ -696,8 +696,111 @@ body {
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-@media (max-width: 720px) {
-  .novel-book { padding: 24px 18px; }
+@media (max-width: 760px) {
+  body { padding: 8px 6px 86px; }
+  .game-header {
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: nowrap;
+  }
+  .farm-sign {
+    padding: 6px 10px;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+  .farm-sign img { width: 26px; height: 26px; }
+  .farm-sign h1 { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .farm-sign small { display: none; }
+  .stardew-hud {
+    padding: 5px 8px;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .hud-date { font-size: 11px; white-space: nowrap; }
+  .hud-clock { font-size: 10px; }
+  .gold-box { padding: 2px 6px; border-width: 2px; }
+  .gold-coin { width: 14px; height: 14px; font-size: 8px; }
+  .gold-digits { font-size: 12px; letter-spacing: 0.5px; }
+
+  .farm-fence { padding: 8px 6px; border-width: 4px; }
+  .fence-top-decor { padding: 2px 4px 8px; font-size: 11px; gap: 6px; }
+  .junimo { width: 18px; height: 18px; }
+  .farm-progress-pill { padding: 2px 8px; font-size: 10px; }
+  .mini-bar { width: 52px; height: 8px; }
+
+  /* Fit all 7 days cleanly inside mobile screen without horizontal scroll */
+  .farm-scroll { overflow-x: hidden; }
+  .farm-grid {
+    grid-template-columns: 28px repeat(7, minmax(0, 1fr));
+    gap: 3px;
+    min-width: 0;
+    padding: 4px;
+  }
+  .day-sign {
+    padding: 5px 1px;
+    font-size: 10.5px;
+    border-width: 2px;
+  }
+  .stone-time {
+    font-size: 10px;
+    min-height: 46px;
+    border-width: 2px;
+  }
+  .stone-time small { display: none; }
+  .soil-patch { min-height: 46px; border-width: 1.5px; }
+  .soil-patch:hover::after { font-size: 9px; content: "+"; }
+
+  .crop-plot {
+    padding: 4px 3px 5px;
+    border-width: 2px;
+    box-shadow: 0 2px 0 rgba(36, 16, 4, 0.35);
+  }
+  .plot-badge {
+    position: static;
+    display: inline-block;
+    font-size: 8px;
+    padding: 0 3px;
+    margin-bottom: 2px;
+  }
+  .plot-title {
+    font-size: 10px;
+    line-height: 1.2;
+    padding-right: 0;
+    margin-bottom: 2px;
+    word-break: break-all;
+  }
+  .plot-meta {
+    font-size: 8.5px;
+    line-height: 1.15;
+    word-break: break-all;
+  }
+  .plot-sprite-row { margin-top: 3px; justify-content: flex-end; }
+  .plot-soil-strip { display: none; }
+  .plot-crop-svg { width: 16px; height: 16px; }
+
+  /* Mobile Bottom Hotbar: fit all 8 slots cleanly in 100% width */
+  .hotbar-dock {
+    width: calc(100vw - 12px);
+    bottom: 8px;
+    padding: 5px 4px;
+    gap: 3px;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    overflow: hidden;
+  }
+  .hot-slot {
+    min-width: 0;
+    height: 46px;
+    padding: 3px 1px 2px;
+    border-width: 2px;
+    font-size: 8.5px;
+    white-space: nowrap;
+  }
+  .slot-key { display: none; }
+  .hot-slot svg { width: 16px; height: 16px; }
+
+  .cork-board { padding: 12px; }
+  .novel-book { padding: 24px 16px; }
   .novel-meta-grid, .form-grid { grid-template-columns: 1fr; }
-  .hot-slot { min-width: 64px; font-size: 10px; }
 }
