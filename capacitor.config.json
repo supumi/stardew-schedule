@@ -1,0 +1,6 @@
+{
+  "appId": "io.github.supumi.stardewschedule",
+  "appName": "谷物课表",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}

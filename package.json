@@ -1,0 +1,11 @@
+{
+  "name": "stardew-schedule",
+  "version": "3.0.0",
+  "description": "Zero-ad Stardew Valley pixel farm university schedule with Light Novel notes",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  }
+}

@@ -1,19 +1,15 @@
-/* StardewSchedule v2 · Pixel Farm Plot + Pierre's Quest Board */
+/* StardewSchedule v3 · Simple, Practical, Pixel Farm + Pierre's Board + 4-in-1 Import */
 
-const STORAGE_KEY = 'stardew_schedule_v2';
+const STORAGE_KEY = 'stardew_schedule_v3';
 
-const PERIOD_TIMES = [
-  ['08:00', '08:45'], ['08:55', '09:40'],
-  ['10:00', '10:45'], ['10:55', '11:40'],
-  ['14:00', '14:45'], ['14:55', '15:40'],
-  ['16:00', '16:45'], ['16:55', '17:40'],
-  ['19:00', '19:45'], ['19:55', '20:40'],
-  ['20:50', '21:35'], ['21:40', '22:25']
+const DEFAULT_PERIOD_STARTS = [
+  '08:00', '08:55', '10:00', '10:55',
+  '14:00', '14:55', '16:00', '16:55',
+  '19:00', '19:55', '20:50', '21:40'
 ];
 
 const DAYS = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 
-/* 16x16 Crisp Pixel Art Sprites */
 const SPRITES = {
   sprout: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="7" y="9" width="2" height="5" fill="#3a8c3a"/><rect x="4" y="7" width="3" height="2" fill="#5ec24e"/><rect x="9" y="6" width="3" height="2" fill="#7ce063"/><rect x="5" y="13" width="6" height="2" fill="#6e3f1c"/></svg>`,
   parsnip: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="3" fill="#2e8b2e"/><rect x="5" y="2" width="2" height="2" fill="#49b549"/><rect x="9" y="2" width="2" height="2" fill="#49b549"/><rect x="5" y="4" width="6" height="5" fill="#f3c669"/><rect x="6" y="9" width="4" height="3" fill="#e0a23e"/><rect x="7" y="12" width="2" height="3" fill="#c78328"/><rect x="6" y="5" width="2" height="2" fill="#fff4cf"/></svg>`,
@@ -22,7 +18,7 @@ const SPRITES = {
   pumpkin: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="7" y="2" width="2" height="3" fill="#3a7d2c"/><rect x="3" y="5" width="10" height="8" fill="#e67e22"/><rect x="5" y="4" width="6" height="10" fill="#f39c12"/><rect x="7" y="5" width="2" height="8" fill="#d35400"/></svg>`,
   crystal: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="7" y="2" width="2" height="2" fill="#7dd3fc"/><rect x="5" y="4" width="6" height="8" fill="#38bdf8"/><rect x="6" y="6" width="4" height="4" fill="#e0f2fe"/><rect x="7" y="12" width="2" height="2" fill="#0284c7"/></svg>`,
   coffee: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="4" y="4" width="8" height="9" fill="#6f4e37"/><rect x="5" y="3" width="6" height="11" fill="#8b5a2b"/><rect x="7" y="4" width="2" height="9" fill="#3e2723"/></svg>`,
-  junimoGreen: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="7" y="2" width="2" height="2" fill="#1e4d1e"/><rect x="5" y="4" width="6" height="2" fill="#65d455"/><rect x="3" y="6" width="10" height="6" fill="#65d455"/><rect x="4" y="12" width="8" height="2" fill="#4cb53e"/><rect x="5" y="8" width="2" height="2" fill="#1e293b"/><rect x="9" y="8" width="2" height="2" fill="#1e293b"/><rect x="2" y="8" width="1" height="2" fill="#4cb53e"/><rect x="13" y="8" width="1" height="2" fill="#4cb53e"/></svg>`,
+  junimoGreen: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="7" y="2" width="2" height="2" fill="#1e4d1e"/><rect x="5" y="4" width="6" height="2" fill="#65d455"/><rect x="3" y="6" width="10" height="6" fill="#65d455"/><rect x="4" y="12" width="8" height="2" fill="#4cb53e"/><rect x="5" y="8" width="2" height="2" fill="#1e293b"/><rect x="9" y="8" width="2" height="2" fill="#1e293b"/></svg>`,
   junimoYellow: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="7" y="2" width="2" height="2" fill="#7c4a03"/><rect x="5" y="4" width="6" height="2" fill="#fde047"/><rect x="3" y="6" width="10" height="6" fill="#facc15"/><rect x="4" y="12" width="8" height="2" fill="#eab308"/><rect x="5" y="8" width="2" height="2" fill="#1e293b"/><rect x="9" y="8" width="2" height="2" fill="#1e293b"/></svg>`,
   board: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="2" y="2" width="12" height="12" fill="#7c4d25"/><rect x="4" y="4" width="8" height="8" fill="#fae5b2"/><rect x="7" y="3" width="2" height="2" fill="#dc2626"/><rect x="5" y="7" width="6" height="1" fill="#73441e"/><rect x="5" y="9" width="4" height="1" fill="#73441e"/></svg>`,
   crate: `<svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="2" y="4" width="12" height="10" fill="#964b17"/><rect x="3" y="5" width="10" height="8" fill="#cf8338"/><rect x="7" y="2" width="2" height="6" fill="#38bdf8"/><rect x="5" y="6" width="6" height="2" fill="#38bdf8"/></svg>`
@@ -39,53 +35,59 @@ const DEFAULT_COURSES = [
 ];
 
 let appState = loadState();
-let activeView = 'farm'; // 'farm' | 'board'
+let activeView = 'farm';
 let boardDay = getTodayIdx();
 let activeCourseId = null;
 let editingCourseId = null;
 
-function getTodayIdx() {
-  const d = new Date().getDay();
-  return d === 0 ? 7 : d;
+function getTodayIdx() { const d = new Date().getDay(); return d === 0 ? 7 : d; }
+
+function computeCurrentWeek(startDateStr) {
+  if (!startDateStr) return 1;
+  const start = new Date(startDateStr + 'T00:00:00');
+  const diffDays = Math.floor((Date.now() - start.getTime()) / 86400000);
+  if (isNaN(diffDays) || diffDays < 0) return 1;
+  return Math.min(20, Math.floor(diffDays / 7) + 1);
 }
 
 function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('stardew_schedule_v1');
+    const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('stardew_schedule_v2');
     if (raw) {
-      const parsed = JSON.parse(raw);
+      const p = JSON.parse(raw);
+      const startDate = p.startDate || '';
       return {
-        week: parsed.week || 1,
-        gold: parsed.gold ?? 150,
-        sfx: parsed.sfx ?? true,
-        harvested: parsed.harvested || { '1_c1': true, '1_c3': true },
-        courses: Array.isArray(parsed.courses) && parsed.courses.length ? parsed.courses : structuredClone(DEFAULT_COURSES)
+        week: startDate ? computeCurrentWeek(startDate) : (p.week || 1),
+        startDate,
+        periodStarts: Array.isArray(p.periodStarts) && p.periodStarts.length === 12 ? p.periodStarts : [...DEFAULT_PERIOD_STARTS],
+        gold: p.gold ?? 250,
+        sfx: p.sfx ?? true,
+        harvested: p.harvested || { '1_c1': true, '1_c3': true },
+        ddls: Array.isArray(p.ddls) ? p.ddls : [{ id: 'd1', title: '高数习题 P32 提交', date: new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10), done: false }],
+        courses: Array.isArray(p.courses) && p.courses.length ? p.courses : structuredClone(DEFAULT_COURSES)
       };
     }
   } catch (e) {}
   return {
     week: 1,
+    startDate: '',
+    periodStarts: [...DEFAULT_PERIOD_STARTS],
     gold: 250,
     sfx: true,
     harvested: { '1_c1': true, '1_c3': true },
+    ddls: [{ id: 'd1', title: '高数习题 P32 提交', date: new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10), done: false }],
     courses: structuredClone(DEFAULT_COURSES)
   };
 }
 
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appState)); }
 
-/* 8-bit Web Audio SFX */
 function playChime(type = 'click') {
   if (!appState.sfx) return;
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'square';
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    const osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.type = 'square'; osc.connect(gain); gain.connect(ctx.destination);
     const now = ctx.currentTime;
     if (type === 'coin') {
       osc.frequency.setValueAtTime(987.77, now);
@@ -114,8 +116,7 @@ function spawnFloatGold(x, y, text = '+50G') {
 
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2400);
 }
 
@@ -137,11 +138,8 @@ function isCourseInWeek(weekStr, targetWeek) {
   return false;
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
-}
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
 
-/* Switch between Farm Plot and Pierre's Quest Board */
 function switchView(v) {
   activeView = v;
   document.getElementById('viewFarm').style.display = v === 'farm' ? 'block' : 'none';
@@ -152,37 +150,53 @@ function switchView(v) {
   renderAll();
 }
 
+function updateNextCourseHint(todayIdx, weekCourses) {
+  const now = new Date();
+  const nowMins = now.getHours() * 60 + now.getMinutes();
+  const todayList = weekCourses.filter(c => c.day === todayIdx).sort((a, b) => a.start - b.start);
+  const next = todayList.find(c => {
+    const [hh, mm] = (appState.periodStarts[c.start - 1] || '08:00').split(':').map(Number);
+    return hh * 60 + mm > nowMins;
+  });
+  const hint = document.getElementById('nextCourseHint');
+  if (next) {
+    const tStr = appState.periodStarts[next.start - 1];
+    hint.textContent = `下节课：${next.name}（${tStr}${next.room ? ' · ' + next.room : ''}）`;
+  } else {
+    hint.textContent = '今日课程已全部结束 · 点击任意地块可查看轻小说手记';
+  }
+}
+
 function renderAll() {
   const todayIdx = getTodayIdx();
   document.getElementById('hudDate').textContent = `第 ${appState.week} 周 · ${DAYS[todayIdx - 1]}`;
   document.getElementById('hudGold').textContent = String(appState.gold).padStart(6, '0');
   document.getElementById('hotWeekNum').textContent = `W${appState.week}`;
-  document.getElementById('sfxLabel').textContent = appState.sfx ? '音效开' : '音效关';
 
   const weekCourses = appState.courses.filter(c => isCourseInWeek(c.weeks, appState.week));
   const done = weekCourses.filter(c => appState.harvested[`${appState.week}_${c.id}`]).length;
   const pct = weekCourses.length ? Math.round((done / weekCourses.length) * 100) : 0;
   document.getElementById('farmProgress').style.width = pct + '%';
-  document.getElementById('farmCount').textContent = `${done} / ${weekCourses.length} 块已收割`;
+  document.getElementById('farmCount').textContent = `${done}/${weekCourses.length}`;
 
+  updateNextCourseHint(todayIdx, weekCourses);
   renderFarmGrid(todayIdx, weekCourses);
   renderQuestBoard(todayIdx, weekCourses);
+  renderDdlBoard();
 }
 
-/* VIEW A: Pixel Farm Plot */
 function renderFarmGrid(todayIdx, weekCourses) {
   const grid = document.getElementById('farmGrid');
   grid.innerHTML = '';
 
   const corner = document.createElement('div');
-  corner.className = 'day-sign';
-  corner.textContent = '节次';
+  corner.className = 'day-sign'; corner.textContent = '节';
   grid.appendChild(corner);
 
   DAYS.forEach((d, i) => {
     const h = document.createElement('div');
     h.className = 'day-sign' + (i + 1 === todayIdx ? ' today' : '');
-    h.textContent = d + (i + 1 === todayIdx ? ' ★' : '');
+    h.textContent = d + (i + 1 === todayIdx ? '★' : '');
     grid.appendChild(h);
   });
 
@@ -190,9 +204,8 @@ function renderFarmGrid(todayIdx, weekCourses) {
   for (let p = 1; p <= 12; p++) {
     const tCol = document.createElement('div');
     tCol.className = 'stone-time';
-    tCol.style.gridColumn = '1';
-    tCol.style.gridRow = String(p + 1);
-    tCol.innerHTML = `${p}<small>${PERIOD_TIMES[p - 1][0]}</small>`;
+    tCol.style.gridColumn = '1'; tCol.style.gridRow = String(p + 1);
+    tCol.innerHTML = `${p}<small>${appState.periodStarts[p - 1] || ''}</small>`;
     grid.appendChild(tCol);
 
     for (let d = 1; d <= 7; d++) {
@@ -216,7 +229,7 @@ function renderFarmGrid(todayIdx, weekCourses) {
             <div class="plot-meta">${course.room ? '@' + escapeHtml(course.room) : ''}${course.teacher ? ' · ' + escapeHtml(course.teacher) : ''}</div>
           </div>
           <div class="plot-sprite-row">
-            <span class="plot-soil-strip">${PERIOD_TIMES[course.start - 1][0]}</span>
+            <span class="plot-soil-strip">${appState.periodStarts[course.start - 1] || ''}</span>
             <span class="plot-crop-svg">${isDone ? SPRITES[course.crop || 'parsnip'] : SPRITES.sprout}</span>
           </div>
         `;
@@ -225,8 +238,7 @@ function renderFarmGrid(todayIdx, weekCourses) {
       } else {
         const soil = document.createElement('div');
         soil.className = 'soil-patch' + (d === todayIdx ? ' today-col' : '');
-        soil.style.gridColumn = String(d + 1);
-        soil.style.gridRow = String(p + 1);
+        soil.style.gridColumn = String(d + 1); soil.style.gridRow = String(p + 1);
         soil.onclick = () => { playChime('click'); openCourseModal(null, d, p); };
         grid.appendChild(soil);
       }
@@ -234,7 +246,6 @@ function renderFarmGrid(todayIdx, weekCourses) {
   }
 }
 
-/* VIEW B: Pierre's Quest Bulletin Board */
 function renderQuestBoard(todayIdx, weekCourses) {
   const pills = document.getElementById('boardDayPills');
   pills.innerHTML = '';
@@ -253,7 +264,7 @@ function renderQuestBoard(todayIdx, weekCourses) {
   qGrid.innerHTML = '';
 
   if (!list.length) {
-    qGrid.innerHTML = `<div class="empty-board" style="grid-column:1/-1;">今天没有安排课程！去鹈鹕镇海边钓鱼，或者点底部「7 播种新课」添加安排吧。</div>`;
+    qGrid.innerHTML = `<div class="empty-board" style="grid-column:1/-1;">今天没有安排课程！去鹈鹕镇休息，或点底部「加课」播种新安排。</div>`;
     return;
   }
 
@@ -265,11 +276,11 @@ function renderQuestBoard(todayIdx, weekCourses) {
       <div class="thumbtack"></div>
       <div class="quest-head">
         <h3>${escapeHtml(c.name)}</h3>
-        <span class="quest-time">第${c.start}-${c.end}节 · ${PERIOD_TIMES[c.start - 1][0]}</span>
+        <span class="quest-time">第${c.start}-${c.end}节 · ${appState.periodStarts[c.start - 1] || ''}</span>
       </div>
       <div class="quest-body">
         <div><b>地点：</b>${escapeHtml(c.room || '未填写')} &nbsp;|&nbsp; <b>教师：</b>${escapeHtml(c.teacher || '未填写')}</div>
-        <div style="margin-top:6px;"><b>手记摘要：</b>${escapeHtml((c.note || '暂无笔记，点击翻开轻小说手记记录重点...').slice(0, 48))}</div>
+        <div style="margin-top:6px;"><b>手记：</b>${escapeHtml((c.note || '暂无笔记，点右下角翻开轻小说手记...').slice(0, 48))}</div>
       </div>
       <div class="quest-foot">
         <button class="px-btn ${isDone ? '' : 'green'}" onclick="toggleHarvestDirect('${c.id}', event)">
@@ -280,6 +291,58 @@ function renderQuestBoard(todayIdx, weekCourses) {
     `;
     qGrid.appendChild(card);
   });
+}
+
+/* Homework / Exam DDL Quests */
+function renderDdlBoard() {
+  const wrap = document.getElementById('ddlGrid');
+  wrap.innerHTML = '';
+  if (!appState.ddls.length) {
+    wrap.innerHTML = `<div class="empty-board" style="grid-column:1/-1;padding:18px;">暂无作业或考试 DDL，右上角一行即可贴上木板！</div>`;
+    return;
+  }
+  appState.ddls.forEach(d => {
+    const daysLeft = d.date ? Math.ceil((new Date(d.date + 'T23:59:59') - Date.now()) / 86400000) : null;
+    const badge = daysLeft === null ? '无日期' : (daysLeft < 0 ? '已截止' : (daysLeft === 0 ? '今天截止!' : `剩 ${daysLeft} 天`));
+    const card = document.createElement('div');
+    card.className = 'quest-note';
+    card.style.opacity = d.done ? '0.68' : '1';
+    card.innerHTML = `
+      <div class="thumbtack" style="background:${d.done ? '#16a34a' : '#dc2626'};"></div>
+      <div class="quest-head">
+        <h3 style="${d.done ? 'text-decoration:line-through;' : ''}">${escapeHtml(d.title)}</h3>
+        <span class="quest-time">${badge}</span>
+      </div>
+      <div class="quest-foot">
+        <button class="px-btn ${d.done ? '' : 'green'}" onclick="toggleDdl('${d.id}', event)">${d.done ? '已完成 (+100G)' : '交付悬赏 (+100G)'}</button>
+        <button class="px-btn" style="color:#b91c1c;" onclick="deleteDdl('${d.id}')">撕掉</button>
+      </div>
+    `;
+    wrap.appendChild(card);
+  });
+}
+
+function addDdlQuest() {
+  const title = document.getElementById('ddlTitle').value.trim();
+  const date = document.getElementById('ddlDate').value;
+  if (!title) return showToast('请输入作业或考试名称');
+  appState.ddls.unshift({ id: 'd_' + Date.now(), title, date, done: false });
+  document.getElementById('ddlTitle').value = '';
+  saveState(); renderDdlBoard(); playChime('click'); showToast('已贴上悬赏木板！');
+}
+
+function toggleDdl(id, ev) {
+  const item = appState.ddls.find(x => x.id === id);
+  if (!item) return;
+  item.done = !item.done;
+  if (item.done) { appState.gold += 100; playChime('coin'); spawnFloatGold(ev?.clientX, ev?.clientY, '+100G'); }
+  else { appState.gold = Math.max(0, appState.gold - 100); }
+  saveState(); renderAll();
+}
+
+function deleteDdl(id) {
+  appState.ddls = appState.ddls.filter(x => x.id !== id);
+  saveState(); renderDdlBoard();
 }
 
 function toggleHarvestDirect(courseId, ev) {
@@ -293,8 +356,7 @@ function toggleHarvestDirect(courseId, ev) {
     playChime('coin');
     spawnFloatGold(ev?.clientX, ev?.clientY, '+50G');
   }
-  saveState();
-  renderAll();
+  saveState(); renderAll();
 }
 
 /* Light Novel Reader */
@@ -306,7 +368,7 @@ function openNovelModal(courseId) {
   document.getElementById('nvVol').textContent = `VOLUME ${String(idx).padStart(2, '0')} · 轻小说课程手记`;
   document.getElementById('nvTitle').textContent = c.name;
   document.getElementById('nvMeta').innerHTML = `
-    <div><b>时间：</b>${DAYS[c.day - 1]} 第 ${c.start}-${c.end} 节（${PERIOD_TIMES[c.start - 1][0]}–${PERIOD_TIMES[c.end - 1][1]}）</div>
+    <div><b>时间：</b>${DAYS[c.day - 1]} 第 ${c.start}-${c.end} 节（${appState.periodStarts[c.start - 1] || ''} 起）</div>
     <div><b>地点：</b>${escapeHtml(c.room || '未填写')}</div>
     <div><b>教师：</b>${escapeHtml(c.teacher || '未填写')}</div>
     <div><b>周次：</b>第 ${escapeHtml(c.weeks || '1-16')} 周</div>
@@ -319,15 +381,8 @@ function openNovelModal(courseId) {
   document.getElementById('nvHarvestBtn').textContent = isDone ? '★ 本周已收割 (+50G)' : '收割打卡 (+50G)';
   document.getElementById('novelModal').classList.add('open');
 }
-
 function setNovelFont(px) { document.getElementById('nvNote').style.fontSize = px + 'px'; }
-
-function harvestCurrentCourse(ev) {
-  if (!activeCourseId) return;
-  toggleHarvestDirect(activeCourseId, ev);
-  openNovelModal(activeCourseId);
-}
-
+function harvestCurrentCourse(ev) { if (!activeCourseId) return; toggleHarvestDirect(activeCourseId, ev); openNovelModal(activeCourseId); }
 function editCurrentCourse() { closeModal('novelModal'); openCourseModal(activeCourseId); }
 function deleteCurrentCourse() {
   if (!activeCourseId) return;
@@ -335,7 +390,7 @@ function deleteCurrentCourse() {
   saveState(); closeModal('novelModal'); renderAll(); showToast('已铲除该地块课程');
 }
 
-/* Course Modal */
+/* Add / Edit Course */
 function openCourseModal(courseId = null, defaultDay = 1, defaultStart = 1) {
   editingCourseId = courseId;
   const c = courseId ? appState.courses.find(x => x.id === courseId) : null;
@@ -359,10 +414,8 @@ function saveCourseForm() {
   const end = Math.max(start, Math.min(12, parseInt(document.getElementById('fEnd').value, 10) || start));
   const payload = {
     id: editingCourseId || ('c_' + Date.now() + Math.random().toString(36).slice(2, 5)),
-    name,
-    room: document.getElementById('fRoom').value.trim(),
-    day: parseInt(document.getElementById('fDay').value, 10),
-    start, end,
+    name, room: document.getElementById('fRoom').value.trim(),
+    day: parseInt(document.getElementById('fDay').value, 10), start, end,
     teacher: document.getElementById('fTeacher').value.trim(),
     weeks: document.getElementById('fWeeks').value.trim() || '1-16',
     crop: document.getElementById('fCrop').value,
@@ -372,13 +425,28 @@ function saveCourseForm() {
   if (editingCourseId) {
     const idx = appState.courses.findIndex(x => x.id === editingCourseId);
     if (idx >= 0) appState.courses[idx] = payload;
-  } else {
-    appState.courses.push(payload);
-  }
+  } else { appState.courses.push(payload); }
   saveState(); closeModal('courseModal'); renderAll(); playChime('coin'); showToast('已播种到农田！');
 }
 
-/* 3-in-1 Import */
+/* Settings Modal */
+function openSettingsModal() {
+  document.getElementById('setStartDate').value = appState.startDate || '';
+  document.getElementById('setSfx').value = appState.sfx ? 'on' : 'off';
+  document.getElementById('setPeriodStarts').value = appState.periodStarts.join(',');
+  document.getElementById('settingsModal').classList.add('open');
+}
+
+function saveSettings() {
+  appState.startDate = document.getElementById('setStartDate').value;
+  if (appState.startDate) appState.week = computeCurrentWeek(appState.startDate);
+  appState.sfx = document.getElementById('setSfx').value === 'on';
+  const parts = document.getElementById('setPeriodStarts').value.split(/[,，\s]+/).map(s => s.trim()).filter(Boolean);
+  if (parts.length === 12) appState.periodStarts = parts;
+  saveState(); closeModal('settingsModal'); renderAll(); showToast('设置已保存！');
+}
+
+/* ================= 4-IN-1 IMPORT ENGINE ================= */
 function openImportModal() { document.getElementById('importModal').classList.add('open'); }
 function switchImportTab(tab, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -422,8 +490,8 @@ function importFromJsonText() {
   } catch (e) { showToast('JSON 格式有误，请确认完整复制了 [...]'); }
 }
 
-function importFromPlainText() {
-  const lines = document.getElementById('plainTextInput').value.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+function parseLinesToCourses(text) {
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
   const dayMap = { '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '日': 7, '天': 7, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7 };
   const parsed = [];
   for (const line of lines) {
@@ -440,7 +508,46 @@ function importFromPlainText() {
       weeks: wm ? wm[1].replace(/\s+/g, '') : '1-16'
     });
   }
-  mergeImportedCourses(parsed);
+  return parsed;
+}
+
+function importFromPlainText() {
+  mergeImportedCourses(parseLinesToCourses(document.getElementById('plainTextInput').value));
+}
+
+async function importFromPdf(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const st = document.getElementById('pdfStatus');
+  st.textContent = '正在加载 PDF 解析引擎...';
+  try {
+    if (!window.pdfjsLib) {
+      await new Promise((res, rej) => {
+        const sc = document.createElement('script');
+        sc.src = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+        sc.onload = res; sc.onerror = rej; document.head.appendChild(sc);
+      });
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    }
+    const buf = await file.arrayBuffer();
+    const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+    let fullText = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      fullText += content.items.map(it => it.str).join(' ') + '\n';
+    }
+    const parsed = parseLinesToCourses(fullText);
+    if (parsed.length) {
+      mergeImportedCourses(parsed);
+    } else {
+      st.textContent = '该 PDF 为复杂表格排版，已自动把提取内容填入「文本秒解析」框（或推荐直接截图用「AI 截图导入」1 秒识别）！';
+      document.getElementById('plainTextInput').value = fullText.slice(0, 2000);
+    }
+  } catch (e) {
+    st.textContent = 'PDF 解析失败：' + e.message + '（推荐直接用「AI 截图导入」）';
+  }
+  input.value = '';
 }
 
 function importFromFile(input) {
@@ -480,9 +587,7 @@ function importFromFile(input) {
 function exportBackupJson() {
   const blob = new Blob([JSON.stringify(appState.courses, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'stardew-schedule-backup.json';
-  a.click();
+  a.href = URL.createObjectURL(blob); a.download = 'stardew-schedule-backup.json'; a.click();
   showToast('已导出 JSON 备份');
 }
 
@@ -493,18 +598,15 @@ function resetDemoData() {
 }
 
 function changeWeek(delta) { appState.week = Math.max(1, Math.min(20, appState.week + delta)); saveState(); renderAll(); playChime('click'); }
-function resetToWeek1() { appState.week = 1; saveState(); renderAll(); playChime('click'); }
-function toggleSfx() { appState.sfx = !appState.sfx; saveState(); renderAll(); }
+function jumpToCurrentWeek() { appState.week = appState.startDate ? computeCurrentWeek(appState.startDate) : 1; saveState(); renderAll(); playChime('click'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-/* Keyboard shortcuts 1/2 for hotbar */
 window.addEventListener('keydown', e => {
   if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
   if (e.key === '1') switchView('farm');
   if (e.key === '2') switchView('board');
 });
 
-/* Boot */
 (function boot() {
   document.getElementById('junimo1').innerHTML = SPRITES.junimoGreen;
   document.getElementById('junimo2').innerHTML = SPRITES.junimoYellow;

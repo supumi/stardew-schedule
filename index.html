@@ -16,7 +16,7 @@
         <img src="./icon.svg" alt="StardewSchedule" />
         <div>
           <h1>谷物课表 · StardewSchedule</h1>
-          <small>每节课都是一块农田 · 点击作物翻开轻小说手记</small>
+          <small id="nextCourseHint">每节课都是一块农田 · 点击作物翻开轻小说手记</small>
         </div>
       </div>
 
@@ -27,7 +27,7 @@
         </div>
         <div class="gold-box">
           <span class="gold-coin">G</span>
-          <span class="gold-digits" id="hudGold">000150</span>
+          <span class="gold-digits" id="hudGold">000250</span>
         </div>
       </div>
     </header>
@@ -50,17 +50,30 @@
       </div>
     </section>
 
-    <!-- VIEW B: PIERRE'S BULLETIN BOARD -->
+    <!-- VIEW B: PIERRE'S BULLETIN BOARD (Courses + Homework/Exam DDL) -->
     <section id="viewBoard" class="cork-board" style="display:none;">
       <div class="board-top">
-        <div class="board-title" id="boardTitle">📌 皮埃尔今日课表任务板</div>
+        <div class="board-title" id="boardTitle">皮埃尔今日课表任务板</div>
         <div class="day-pills" id="boardDayPills"></div>
       </div>
       <div class="quest-grid" id="questGrid"></div>
+
+      <!-- Simple 1-line DDL Quest Section -->
+      <div style="margin-top:22px;padding-top:16px;border-top:3px dashed rgba(67,29,7,0.35);">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div class="board-title" style="font-size:14px;">作业 / 考试 DDL 悬赏（完成 +100G）</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <input id="ddlTitle" placeholder="例如：高数习题 / 英语四级" style="padding:5px 9px;border:2px solid #431d07;border-radius:4px;background:#fff4d2;font-size:12.5px;" />
+            <input id="ddlDate" type="date" style="padding:5px 8px;border:2px solid #431d07;border-radius:4px;background:#fff4d2;font-size:12px;" />
+            <button class="px-btn primary" onclick="addDdlQuest()">＋ 贴上木板</button>
+          </div>
+        </div>
+        <div class="quest-grid" id="ddlGrid"></div>
+      </div>
     </section>
   </div>
 
-  <!-- CLASSIC STARDEW BOTTOM HOTBAR -->
+  <!-- CLASSIC STARDEW BOTTOM HOTBAR (8 clean slots) -->
   <nav class="hotbar-dock" aria-label="Stardew Hotbar">
     <button class="hot-slot active" id="slotFarm" onclick="switchView('farm')">
       <span class="slot-key">1</span>
@@ -70,37 +83,37 @@
     <button class="hot-slot" id="slotBoard" onclick="switchView('board')">
       <span class="slot-key">2</span>
       <span id="icoBoard"></span>
-      <span>今日任务板</span>
+      <span>任务板</span>
     </button>
     <button class="hot-slot" onclick="changeWeek(-1)">
       <span class="slot-key">3</span>
-      <span style="font-size:16px;">◀</span>
+      <span style="font-size:15px;">◀</span>
       <span>上周</span>
     </button>
-    <button class="hot-slot" onclick="resetToWeek1()" title="点击回到第1周">
+    <button class="hot-slot" onclick="jumpToCurrentWeek()" title="回到当前真实教学周">
       <span class="slot-key">4</span>
-      <strong id="hotWeekNum" style="font-size:15px;">W1</strong>
-      <span>当前周</span>
+      <strong id="hotWeekNum" style="font-size:14px;">W1</strong>
+      <span>本周</span>
     </button>
     <button class="hot-slot" onclick="changeWeek(1)">
       <span class="slot-key">5</span>
-      <span style="font-size:16px;">▶</span>
+      <span style="font-size:15px;">▶</span>
       <span>下周</span>
     </button>
     <button class="hot-slot" onclick="openImportModal()">
       <span class="slot-key">6</span>
       <span id="icoImport"></span>
-      <span>极简导入</span>
+      <span>导入</span>
     </button>
     <button class="hot-slot" onclick="openCourseModal()">
       <span class="slot-key">7</span>
       <span id="icoPlant"></span>
-      <span>播种新课</span>
+      <span>加课</span>
     </button>
-    <button class="hot-slot" id="slotSfx" onclick="toggleSfx()">
+    <button class="hot-slot" onclick="openSettingsModal()">
       <span class="slot-key">8</span>
-      <span id="icoSfx" style="font-size:15px;">♪</span>
-      <span id="sfxLabel">音效开</span>
+      <span style="font-size:15px;">⚙</span>
+      <span>设置</span>
     </button>
   </nav>
 
@@ -112,7 +125,7 @@
       <h2 class="novel-title" id="nvTitle">高等数学</h2>
       <div class="novel-meta-grid" id="nvMeta"></div>
       <div class="novel-section-title">
-        <span>课堂手记 &amp; 作业 DDL（自动保存）</span>
+        <span>课堂手记 &amp; 作业重点（自动保存）</span>
         <div style="display:flex;gap:6px;">
           <button class="px-btn" style="padding:2px 8px;font-size:11px;" onclick="setNovelFont(14)">小</button>
           <button class="px-btn" style="padding:2px 8px;font-size:11px;" onclick="setNovelFont(16)">中</button>
@@ -131,22 +144,23 @@
     </div>
   </div>
 
-  <!-- ================= 3-IN-1 IMPORT MODAL ================= -->
+  <!-- ================= 4-IN-1 IMPORT MODAL ================= -->
   <div class="modal-mask" id="importModal" onclick="if(event.target===this) closeModal('importModal')">
     <div class="wood-panel dialog-box">
       <div class="dialog-head">
-        <h3>3 种极简导入课表（无需对接教务系统）</h3>
+        <h3>4 合 1 极简导入课表（无需教务登录）</h3>
         <button class="px-btn" onclick="closeModal('importModal')">✕</button>
       </div>
       <div class="tab-row">
-        <button class="tab-btn active" onclick="switchImportTab('ai', this)">AI 截图一键导入（推荐）</button>
-        <button class="tab-btn" onclick="switchImportTab('text', this)">大白话文本秒解析</button>
-        <button class="tab-btn" onclick="switchImportTab('file', this)">ICS / JSON 备份</button>
+        <button class="tab-btn active" onclick="switchImportTab('ai', this)">AI 截图导入（最稳）</button>
+        <button class="tab-btn" onclick="switchImportTab('pdf', this)">PDF 课表直导</button>
+        <button class="tab-btn" onclick="switchImportTab('text', this)">文本秒解析</button>
+        <button class="tab-btn" onclick="switchImportTab('file', this)">ICS / 备份</button>
       </div>
 
       <div id="imp-ai" class="imp-pane">
         <p style="font-size:12.5px;margin-bottom:8px;">
-          <b>全高校 100% 通用：</b>① 复制下方提示词，连同课表截图发给任意免费 AI（豆包 / DeepSeek / Kimi）；② 把返回的 JSON 粘贴到下面一键导入！
+          <b>全高校 100% 通用：</b>① 复制提示词，连同课表截图发给豆包 / DeepSeek / Kimi；② 粘贴返回的 JSON 一键生成！
         </p>
         <div class="prompt-box" id="aiPromptText">请识别这张大学课程表截图，只输出纯 JSON 数组（不要解释文字），格式如下：
 [{"name":"高等数学","day":1,"start":1,"end":2,"room":"教三201","teacher":"王老师","weeks":"1-16","note":""}]
@@ -154,14 +168,25 @@
         <button class="px-btn" style="margin-bottom:10px;" onclick="copyAiPrompt()">一键复制 AI 识图提示词</button>
         <div class="field" style="margin-bottom:12px;">
           <label>粘贴 AI 返回的 JSON：</label>
-          <textarea id="aiJsonInput" rows="5" placeholder='[{"name":"高等数学","day":1,"start":1,"end":2,"room":"教三201","teacher":"王老师","weeks":"1-16"}]'></textarea>
+          <textarea id="aiJsonInput" rows="4" placeholder='[{"name":"高等数学","day":1,"start":1,"end":2,"room":"教三201","teacher":"王老师","weeks":"1-16"}]'></textarea>
         </div>
         <button class="px-btn primary" onclick="importFromJsonText()">一键播种整学期课表</button>
       </div>
 
+      <div id="imp-pdf" class="imp-pane" style="display:none;">
+        <p style="font-size:12.5px;margin-bottom:10px;">
+          直接选择从教务系统导出的 <b>PDF 课表文件</b>，自动提取文字并在本地解析（若 PDF 排版特殊，也可一键复制提取文本发给 AI）。
+        </p>
+        <label class="px-btn primary" style="cursor:pointer;margin-bottom:10px;">
+          选择 PDF 课表文件
+          <input type="file" id="pdfImportInput" accept=".pdf" hidden onchange="importFromPdf(this)" />
+        </label>
+        <div id="pdfStatus" style="font-size:12px;color:#73441e;margin-top:8px;"></div>
+      </div>
+
       <div id="imp-text" class="imp-pane" style="display:none;">
         <p style="font-size:12.5px;margin-bottom:8px;">
-          离线也能用！每行一门课，例如：<code>周一 1-2节 高等数学 教三201 王教授 1-16周</code>
+          每行一门课，例如：<code>周一 1-2节 高等数学 教三201 王教授 1-16周</code>
         </p>
         <div class="field" style="margin-bottom:12px;">
           <textarea id="plainTextInput" rows="6" placeholder="周一 1-2节 高等数学 教三201 王教授 1-16周&#10;周三 3-4节 大学英语 外语楼305 李老师 1-16周(单)"></textarea>
@@ -170,7 +195,7 @@
       </div>
 
       <div id="imp-file" class="imp-pane" style="display:none;">
-        <p style="font-size:12.5px;margin-bottom:12px;">支持导入 WakeUp / 教务导出的 <code>.ics</code> 日历文件，或本应用的 <code>.json</code> 备份。</p>
+        <p style="font-size:12.5px;margin-bottom:12px;">支持导入 WakeUp 导出的 <code>.ics</code> 日历文件，或本应用的 <code>.json</code> 备份。</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
           <label class="px-btn primary" style="cursor:pointer;">
             选择 .ics / .json 文件
@@ -179,6 +204,37 @@
           <button class="px-btn" onclick="exportBackupJson()">导出 JSON 备份</button>
         </div>
         <button class="px-btn" style="color:#b91c1c;" onclick="resetDemoData()">恢复示例农田</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SIMPLE SETTINGS MODAL (Start Date, Times, SFX) ================= -->
+  <div class="modal-mask" id="settingsModal" onclick="if(event.target===this) closeModal('settingsModal')">
+    <div class="wood-panel dialog-box">
+      <div class="dialog-head">
+        <h3>农田设置（简洁实用）</h3>
+        <button class="px-btn" onclick="closeModal('settingsModal')">✕</button>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>学期第 1 周周一日期（自动算周次）</label>
+          <input type="date" id="setStartDate" />
+        </div>
+        <div class="field">
+          <label>8-bit 像素音效</label>
+          <select id="setSfx">
+            <option value="on">开启音效</option>
+            <option value="off">静音模式</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label>自定义每节课上课时间（1-12 节，逗号分隔，如 08:00,08:55,...）</label>
+        <textarea id="setPeriodStarts" rows="2"></textarea>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button class="px-btn" onclick="closeModal('settingsModal')">取消</button>
+        <button class="px-btn primary" onclick="saveSettings()">保存设置</button>
       </div>
     </div>
   </div>
