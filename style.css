@@ -697,110 +697,117 @@ body {
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 @media (max-width: 760px) {
-  body { padding: 8px 6px 86px; }
+  html, body { width: 100%; max-width: 100vw; overflow-x: hidden; }
+  body { padding: 8px 6px 78px; }
+  .world-shell { width: 100%; max-width: 100%; }
   .game-header {
-    gap: 8px;
+    gap: 6px;
     margin-bottom: 8px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
   }
   .farm-sign {
     padding: 6px 10px;
     gap: 8px;
-    flex: 1;
+    flex: 1 1 100%;
     min-width: 0;
   }
-  .farm-sign img { width: 26px; height: 26px; }
-  .farm-sign h1 { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .farm-sign img { width: 24px; height: 24px; }
+  .farm-sign h1 { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .farm-sign small { display: none; }
   .stardew-hud {
-    padding: 5px 8px;
-    gap: 6px;
-    flex-shrink: 0;
+    padding: 5px 10px;
+    gap: 8px;
+    flex: 1 1 100%;
+    justify-content: space-between;
   }
-  .hud-date { font-size: 11px; white-space: nowrap; }
-  .hud-clock { font-size: 10px; }
-  .gold-box { padding: 2px 6px; border-width: 2px; }
+  .hud-date { font-size: 11.5px; white-space: nowrap; }
+  .hud-clock { font-size: 10.5px; }
+  .gold-box { padding: 2px 8px; border-width: 2px; }
   .gold-coin { width: 14px; height: 14px; font-size: 8px; }
   .gold-digits { font-size: 12px; letter-spacing: 0.5px; }
 
-  .farm-fence { padding: 8px 6px; border-width: 4px; }
-  .fence-top-decor { padding: 2px 4px 8px; font-size: 11px; gap: 6px; }
-  .junimo { width: 18px; height: 18px; }
-  .farm-progress-pill { padding: 2px 8px; font-size: 10px; }
-  .mini-bar { width: 52px; height: 8px; }
+  .farm-fence { padding: 6px 4px; border-width: 3px; }
+  .fence-top-decor { padding: 2px 4px 6px; font-size: 10.5px; gap: 4px; flex-wrap: wrap; }
+  .junimo { width: 16px; height: 16px; }
+  .farm-progress-pill { padding: 2px 6px; font-size: 9.5px; }
+  .mini-bar { width: 46px; height: 7px; }
 
-  /* Fit all 7 days cleanly inside mobile screen without horizontal scroll */
-  .farm-scroll { overflow-x: hidden; }
+  /* Fit all 7 days cleanly inside 375px phone screen */
+  .farm-scroll { overflow-x: hidden; width: 100%; }
   .farm-grid {
-    grid-template-columns: 28px repeat(7, minmax(0, 1fr));
-    gap: 3px;
+    width: 100%;
+    grid-template-columns: 22px repeat(7, minmax(0, 1fr));
+    gap: 2px;
     min-width: 0;
-    padding: 4px;
+    padding: 3px;
   }
   .day-sign {
-    padding: 5px 1px;
-    font-size: 10.5px;
+    padding: 4px 0;
+    font-size: 9.5px;
     border-width: 2px;
   }
   .stone-time {
-    font-size: 10px;
-    min-height: 46px;
-    border-width: 2px;
+    font-size: 9.5px;
+    min-height: 44px;
+    border-width: 1.5px;
   }
   .stone-time small { display: none; }
-  .soil-patch { min-height: 46px; border-width: 1.5px; }
+  .soil-patch { min-height: 44px; border-width: 1px; }
   .soil-patch:hover::after { font-size: 9px; content: "+"; }
 
   .crop-plot {
-    padding: 4px 3px 5px;
+    padding: 3px 2px 4px;
     border-width: 2px;
     box-shadow: 0 2px 0 rgba(36, 16, 4, 0.35);
   }
   .plot-badge {
     position: static;
     display: inline-block;
-    font-size: 8px;
-    padding: 0 3px;
-    margin-bottom: 2px;
+    font-size: 7.5px;
+    padding: 0 2px;
+    margin-bottom: 1px;
   }
   .plot-title {
-    font-size: 10px;
-    line-height: 1.2;
+    font-size: 9.5px;
+    line-height: 1.15;
     padding-right: 0;
     margin-bottom: 2px;
     word-break: break-all;
   }
   .plot-meta {
-    font-size: 8.5px;
-    line-height: 1.15;
+    font-size: 8px;
+    line-height: 1.1;
     word-break: break-all;
   }
-  .plot-sprite-row { margin-top: 3px; justify-content: flex-end; }
+  .plot-sprite-row { margin-top: 2px; justify-content: flex-end; }
   .plot-soil-strip { display: none; }
-  .plot-crop-svg { width: 16px; height: 16px; }
+  .plot-crop-svg { width: 14px; height: 14px; }
 
-  /* Mobile Bottom Hotbar: fit all 8 slots cleanly in 100% width */
+  /* Mobile Bottom Hotbar: all 8 slots fit 100% cleanly */
   .hotbar-dock {
-    width: calc(100vw - 12px);
-    bottom: 8px;
-    padding: 5px 4px;
-    gap: 3px;
+    width: calc(100vw - 10px);
+    left: 5px;
+    transform: none;
+    bottom: 6px;
+    padding: 4px 3px;
+    gap: 2px;
     display: grid;
     grid-template-columns: repeat(8, minmax(0, 1fr));
     overflow: hidden;
   }
   .hot-slot {
     min-width: 0;
-    height: 46px;
-    padding: 3px 1px 2px;
+    height: 44px;
+    padding: 2px 1px;
     border-width: 2px;
-    font-size: 8.5px;
+    font-size: 8px;
+    overflow: hidden;
     white-space: nowrap;
   }
   .slot-key { display: none; }
-  .hot-slot svg { width: 16px; height: 16px; }
+  .hot-slot svg { width: 15px; height: 15px; }
 
-  .cork-board { padding: 12px; }
-  .novel-book { padding: 24px 16px; }
+  .cork-board { padding: 10px; }
+  .novel-book { padding: 22px 14px; }
   .novel-meta-grid, .form-grid { grid-template-columns: 1fr; }
 }
