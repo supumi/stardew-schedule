@@ -1,582 +1,703 @@
 :root {
-  --wood-dark: #4e2408;
-  --wood-mid: #9e531b;
-  --wood-light: #e5a14e;
+  --wood-dark: #431d07;
+  --wood-mid: #964b17;
+  --wood-light: #e59d49;
   --parchment: #fae5b2;
   --parchment-light: #fff3d1;
-  --parchment-dark: #eccb86;
-  --ink: #3c1e08;
-  --ink-soft: #75461f;
+  --parchment-dark: #e6c178;
+  --soil-dry: #9c6234;
+  --soil-wet: #6e3f1c;
+  --soil-furrow: #532c10;
+  --ink: #381a06;
+  --ink-soft: #73441e;
   --gold: #f5b700;
-  --green: #3a8c3a;
-  --red: #c93b2b;
-  --sky-top: #7ec8e3;
-  --sky-bot: #c9ee9c;
-  --card-radius: 6px;
-}
-
-/* Season Sky & Palette Overrides */
-body[data-season="spring"] { --sky-top: #79c9e8; --sky-bot: #bfe895; }
-body[data-season="summer"] { --sky-top: #4ba3e3; --sky-bot: #f5dc82; }
-body[data-season="fall"]   { --sky-top: #d48453; --sky-bot: #f0c078; }
-body[data-season="winter"] { --sky-top: #6d8db8; --sky-bot: #d5e6f5; }
-
-/* Pure Light Novel Library Theme */
-body[data-theme="novel"] {
-  --wood-dark: #5c4b3b;
-  --wood-mid: #a38f78;
-  --wood-light: #dfd2c0;
-  --parchment: #fbf7ee;
-  --parchment-light: #fffdf8;
-  --parchment-dark: #efe6d5;
-  --ink: #2c241b;
-  --ink-soft: #6e5f4f;
-  --sky-top: #f2eadc;
-  --sky-bot: #e7dcc8;
-}
-
-/* Pixel Night / Mines Theme */
-body[data-theme="night"] {
-  --wood-dark: #141829;
-  --wood-mid: #2f3b5c;
-  --wood-light: #5c70a3;
-  --parchment: #1d2336;
-  --parchment-light: #252c44;
-  --parchment-dark: #151a2a;
-  --ink: #eef2ff;
-  --ink-soft: #9aa7cc;
-  --sky-top: #0c1021;
-  --sky-bot: #1a2140;
+  --cork: #be834f;
+  --cork-dark: #9c6536;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: "Zpix", "PingFang SC", "Microsoft YaHei", sans-serif;
-  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bot) 100%);
-  background-attachment: fixed;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
   color: var(--ink);
   min-height: 100vh;
-  padding: 16px 14px 48px;
+  padding: 16px 14px 104px;
   overflow-x: hidden;
+  /* Pixel Grass Meadow Tile */
+  background-color: #6ab547;
+  background-image:
+    radial-gradient(#569e37 15%, transparent 16%),
+    radial-gradient(#7dc959 15%, transparent 16%),
+    radial-gradient(#f8e16c 10%, transparent 11%);
+  background-size: 48px 48px, 64px 64px, 160px 160px;
+  background-position: 0 0, 24px 24px, 12px 36px;
 }
 
-#seasonCanvas {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.app-shell {
-  position: relative;
-  z-index: 1;
+.world-shell {
   max-width: 1180px;
   margin: 0 auto;
+  position: relative;
 }
 
-/* Iconic Stardew Wooden Bevel Panel */
+/* Iconic Stardew Wood Bevel Frame */
 .wood-panel {
   background: var(--parchment);
   border: 4px solid var(--wood-dark);
-  border-radius: var(--card-radius);
+  border-radius: 6px;
   box-shadow:
     inset 0 0 0 3px var(--wood-light),
     inset 0 0 0 6px var(--wood-mid),
-    0 6px 0 rgba(38, 16, 4, 0.32);
+    0 6px 0 rgba(36, 16, 4, 0.35);
 }
 
-/* Top Bar + Stardew HUD */
-.top-bar {
+/* ================= TOP GAME HUD ================= */
+.game-header {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 14px;
-  padding: 14px 18px;
+  flex-wrap: wrap;
   margin-bottom: 14px;
 }
 
-.brand-area {
+.farm-sign {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 10px 18px;
 }
 
-.brand-icon {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  image-rendering: pixelated;
-}
+.farm-sign img { width: 38px; height: 38px; image-rendering: pixelated; }
 
-.brand-title h1 {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
+.farm-sign h1 {
+  font-size: 19px;
+  font-weight: 900;
   color: var(--ink);
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.5px;
 }
 
-.brand-title p {
+.farm-sign small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+/* Authentic Top-Right Stardew HUD */
+.stardew-hud {
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hud-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hud-date {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.hud-clock {
+  font-family: "JetBrains Mono", "Consolas", monospace;
   font-size: 12px;
+  font-weight: 700;
   color: var(--ink-soft);
 }
 
-/* Stardew Classic Right HUD Box */
-.hud-box {
+.gold-box {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  background: var(--parchment-light);
+  gap: 4px;
+  background: #f5d896;
   border: 3px solid var(--wood-dark);
-  box-shadow: inset 0 0 0 2px var(--wood-light);
-  border-radius: 6px;
-  padding: 8px 14px;
+  border-radius: 4px;
+  padding: 4px 10px;
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.12);
 }
 
-.hud-stat {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  padding-right: 10px;
-  border-right: 2px dashed var(--wood-light);
+.gold-coin {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #f5b700;
+  border: 2px solid #8c5200;
+  font-size: 10px;
+  font-weight: 900;
+  color: #5c3200;
 }
 
-.hud-stat:last-child { border-right: none; padding-right: 0; }
-
-.gold-num {
-  color: #b56500;
+.gold-digits {
   font-family: "JetBrains Mono", "Consolas", monospace;
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #8f4700;
 }
-body[data-theme="night"] .gold-num { color: #ffd166; }
 
-/* Action Toolbar */
-.toolbar {
+/* ================= VIEW A: PIXEL FARM PLOT SCHEDULE ================= */
+.farm-fence {
+  position: relative;
+  background: #7c4d25;
+  border: 5px solid var(--wood-dark);
+  border-radius: 8px;
+  padding: 14px;
+  box-shadow:
+    inset 0 0 0 4px #b87333,
+    inset 0 0 0 8px #5e3413,
+    0 10px 0 rgba(36, 16, 4, 0.35);
+}
+
+.fence-top-decor {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  margin-bottom: 14px;
+  padding: 4px 8px 12px;
+  color: #fff3d1;
+  font-size: 12.5px;
+  font-weight: 800;
 }
 
-.tool-group {
+.junimo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.junimo {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  animation: junimoHop 1.4s ease-in-out infinite;
+}
+.junimo.j2 { animation-delay: 0.45s; }
+@keyframes junimoHop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.farm-progress-pill {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  background: rgba(67, 29, 7, 0.72);
+  border: 2px solid var(--wood-light);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
 }
 
-.px-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 13px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--ink);
-  background: var(--parchment-light);
-  border: 3px solid var(--wood-dark);
-  border-radius: 4px;
-  box-shadow: inset 0 -2px 0 var(--parchment-dark), 0 3px 0 rgba(38, 16, 4, 0.25);
-  cursor: pointer;
-  transition: transform 0.08s;
-}
-
-.px-btn:hover { background: #fff8e2; transform: translateY(-1px); }
-.px-btn:active { transform: translateY(2px); box-shadow: none; }
-body[data-theme="night"] .px-btn:hover { background: #313b5c; }
-
-.px-btn.primary {
-  background: #e59a38;
-  color: #2c1202;
-  box-shadow: inset 0 -2px 0 #b86c16, 0 3px 0 rgba(38, 16, 4, 0.3);
-}
-.px-btn.primary:hover { background: #f2ab49; }
-
-.px-btn.green {
-  background: #67b856;
-  color: #102b0b;
-  box-shadow: inset 0 -2px 0 #448a36, 0 3px 0 rgba(38, 16, 4, 0.3);
-}
-
-.px-select {
-  padding: 6px 10px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--ink);
-  background: var(--parchment-light);
-  border: 3px solid var(--wood-dark);
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* Farm Growth Progress Banner */
-.farm-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding: 10px 18px;
-  margin-bottom: 14px;
-  font-size: 13px;
-}
-
-.farm-crops {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.progress-track {
-  width: 180px;
-  height: 16px;
-  background: var(--parchment-dark);
-  border: 3px solid var(--wood-dark);
+.mini-bar {
+  width: 110px;
+  height: 10px;
+  background: #3d1c06;
+  border: 2px solid #e59d49;
   border-radius: 3px;
   overflow: hidden;
 }
-
-.progress-fill {
+.mini-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #5eb84d, #8ce05a);
-  transition: width 0.4s ease;
+  background: linear-gradient(90deg, #62c44e, #a3e635);
+  transition: width 0.35s ease;
 }
 
-/* Schedule Grid */
-.board-wrap {
-  padding: 14px;
-  overflow-x: auto;
-}
+.farm-scroll { overflow-x: auto; }
 
-.schedule-grid {
+.farm-grid {
   display: grid;
-  grid-template-columns: 62px repeat(7, minmax(122px, 1fr));
+  grid-template-columns: 56px repeat(7, minmax(126px, 1fr));
   gap: 6px;
-  min-width: 920px;
+  min-width: 940px;
+  background: #5b3315;
+  padding: 8px;
+  border-radius: 6px;
+  border: 3px solid #3c1c07;
 }
 
-.grid-head {
-  background: var(--wood-mid);
+/* Wooden Day Signposts */
+.day-sign {
+  background: linear-gradient(180deg, #cf8338 0%, #a55c1e 100%);
   color: #fff6dc;
   border: 3px solid var(--wood-dark);
   border-radius: 4px;
   text-align: center;
-  padding: 8px 4px;
+  padding: 7px 4px;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 900;
+  text-shadow: 1px 1px 0 #431d07;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.25);
 }
 
-.grid-head.today {
-  background: #d97706;
-  box-shadow: inset 0 0 0 2px #fde68a;
+.day-sign.today {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: inset 0 0 0 2px #fef08a;
 }
 
-.time-col {
-  background: var(--parchment-dark);
-  border: 2px solid var(--wood-mid);
+/* Time Stone Markers */
+.stone-time {
+  background: #9ca3af;
+  border: 3px solid #374151;
   border-radius: 4px;
+  color: #1f2937;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6px 2px;
   font-size: 12px;
-  font-weight: 800;
-  min-height: 64px;
+  font-weight: 900;
+  min-height: 60px;
+  box-shadow: inset 0 2px 0 #d1d5db, inset 0 -2px 0 #6b7280;
 }
+.stone-time small { font-size: 9.5px; font-weight: 700; opacity: 0.85; }
 
-.time-col small {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--ink-soft);
-}
-
-.cell-slot {
-  background: rgba(255, 246, 220, 0.55);
-  border: 2px dashed rgba(158, 83, 27, 0.25);
+/* Empty Tilled Soil Patch */
+.soil-patch {
+  background-color: var(--soil-dry);
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(67, 29, 7, 0.16) 0px,
+    rgba(67, 29, 7, 0.16) 4px,
+    transparent 4px,
+    transparent 12px
+  );
+  border: 2px solid var(--soil-furrow);
   border-radius: 4px;
-  min-height: 64px;
+  min-height: 60px;
   cursor: pointer;
-  transition: background 0.15s;
+  position: relative;
+  transition: all 0.12s;
 }
-body[data-theme="night"] .cell-slot {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(148, 163, 184, 0.16);
+.soil-patch.today-col { background-color: var(--soil-wet); }
+.soil-patch:hover {
+  border-color: #fde047;
+  box-shadow: inset 0 0 0 2px rgba(253, 224, 71, 0.55);
 }
-.cell-slot:hover {
-  background: rgba(229, 161, 78, 0.25);
+.soil-patch:hover::after {
+  content: "+ 播种";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fef08a;
+  text-shadow: 1px 1px 0 #3c1c07;
 }
 
-/* Course Card inside Grid */
-.course-card {
+/* Planted Course Plot */
+.crop-plot {
   position: relative;
   border: 3px solid var(--wood-dark);
   border-radius: 6px;
-  padding: 8px;
+  padding: 8px 8px 10px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45), 0 3px 0 rgba(38, 16, 4, 0.25);
+  background: var(--parchment-light);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.55),
+    0 4px 0 rgba(36, 16, 4, 0.45);
   transition: transform 0.12s, box-shadow 0.12s;
   overflow: hidden;
 }
 
-.course-card:hover {
+.crop-plot:hover {
   transform: translateY(-2px);
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.55), 0 5px 0 rgba(38, 16, 4, 0.35);
+  box-shadow:
+    inset 0 0 0 2px #fde047,
+    0 6px 0 rgba(36, 16, 4, 0.5);
 }
 
-.course-card.harvested::after {
-  content: "已收获";
+.crop-plot.harvested {
+  box-shadow:
+    inset 0 0 0 2px #facc15,
+    0 4px 0 rgba(36, 16, 4, 0.45);
+}
+
+.plot-badge {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 5px;
+  right: 5px;
   font-size: 10px;
-  font-weight: 800;
-  background: #2f7d32;
-  color: #fff;
+  font-weight: 900;
   padding: 1px 5px;
   border-radius: 3px;
 }
+.plot-badge.sprout { background: #65a30d; color: #fff; }
+.plot-badge.gold { background: #eab308; color: #422006; }
 
-.course-name {
+.plot-title {
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 900;
   color: #2b1405;
-  line-height: 1.3;
+  line-height: 1.28;
+  padding-right: 46px;
   margin-bottom: 4px;
-  padding-right: 16px;
 }
 
-.course-meta {
+.plot-meta {
   font-size: 11px;
-  color: #4d280c;
+  color: #5c3111;
   line-height: 1.35;
 }
 
-.course-crop {
-  position: absolute;
-  bottom: 4px;
-  right: 5px;
-  width: 22px;
-  height: 22px;
-  opacity: 0.9;
+.plot-sprite-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 6px;
 }
 
-/* ================= LIGHT NOVEL LIBRARY MODAL (轻小说文库课程详情页) ================= */
+.plot-soil-strip {
+  font-size: 10px;
+  font-weight: 800;
+  color: #783f15;
+  background: rgba(156, 98, 52, 0.18);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.plot-crop-svg {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+/* ================= VIEW B: PIERRE'S BULLETIN BOARD (皮埃尔今日任务板) ================= */
+.cork-board {
+  background-color: var(--cork);
+  background-image:
+    radial-gradient(rgba(67, 29, 7, 0.14) 1px, transparent 1px),
+    radial-gradient(rgba(255, 243, 209, 0.14) 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+  border: 6px solid var(--wood-dark);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow:
+    inset 0 0 0 4px var(--wood-light),
+    inset 0 0 0 8px var(--wood-mid),
+    0 10px 0 rgba(36, 16, 4, 0.35);
+}
+
+.board-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 3px dashed rgba(67, 29, 7, 0.35);
+}
+
+.board-title {
+  background: var(--parchment);
+  border: 3px solid var(--wood-dark);
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 900;
+  box-shadow: 0 3px 0 rgba(67, 29, 7, 0.3);
+}
+
+.day-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.day-pill {
+  padding: 5px 11px;
+  font-size: 12.5px;
+  font-weight: 800;
+  background: var(--parchment);
+  border: 3px solid var(--wood-dark);
+  border-radius: 4px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.day-pill.active {
+  background: #e59a38;
+  box-shadow: inset 0 0 0 2px #fef08a;
+}
+
+.quest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 20px;
+}
+
+.quest-note {
+  position: relative;
+  background: #fff4d2;
+  border: 3px solid #593012;
+  border-radius: 4px;
+  padding: 22px 18px 16px;
+  box-shadow: 4px 6px 0 rgba(48, 22, 6, 0.32);
+  transform: rotate(-0.6deg);
+  transition: transform 0.15s;
+}
+.quest-note:nth-child(even) { transform: rotate(0.7deg); }
+.quest-note:hover { transform: rotate(0deg) translateY(-3px); }
+
+/* Pixel Red Thumbtack */
+.thumbtack {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #dc2626;
+  border: 3px solid #450a0a;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+}
+
+.quest-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.quest-head h3 { font-size: 17px; font-weight: 900; }
+.quest-time {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  font-weight: 800;
+  background: #e9c987;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 2px solid #73441e;
+  white-space: nowrap;
+}
+
+.quest-body {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.quest-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border-top: 2px dashed #d6b26d;
+  padding-top: 10px;
+}
+
+.empty-board {
+  text-align: center;
+  padding: 46px 20px;
+  background: rgba(255, 244, 210, 0.85);
+  border: 3px dashed #593012;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* ================= BOTTOM STARDEW PIXEL HOTBAR ================= */
+.hotbar-dock {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  background: #cf873c;
+  border: 4px solid var(--wood-dark);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 3px #f0b662,
+    0 8px 20px rgba(0, 0, 0, 0.45);
+  max-width: 96vw;
+  overflow-x: auto;
+}
+
+.hot-slot {
+  position: relative;
+  min-width: 78px;
+  height: 54px;
+  padding: 6px 8px 4px;
+  background: #f6dca4;
+  border: 3px solid #6b350f;
+  border-radius: 4px;
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.14);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: transform 0.08s;
+  flex-shrink: 0;
+}
+.hot-slot:hover { background: #fff3cf; transform: translateY(-2px); }
+.hot-slot.active {
+  border-color: #dc2626;
+  box-shadow: inset 0 0 0 2px #facc15, 0 0 10px rgba(220, 38, 38, 0.4);
+  background: #fff7dc;
+}
+.slot-key {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: #8a5020;
+}
+
+.hot-slot svg { width: 20px; height: 20px; }
+
+/* Floating +50G Animation */
+.float-gold {
+  position: fixed;
+  z-index: 220;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 20px;
+  font-weight: 900;
+  color: #facc15;
+  text-shadow: 2px 2px 0 #431d07, -1px -1px 0 #431d07;
+  pointer-events: none;
+  animation: floatUp 1.1s ease-out forwards;
+}
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0) scale(0.9); }
+  100% { opacity: 0; transform: translateY(-56px) scale(1.15); }
+}
+
+/* ================= BUTTONS & MODALS ================= */
+.px-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--parchment-light);
+  border: 3px solid var(--wood-dark);
+  border-radius: 4px;
+  box-shadow: inset 0 -2px 0 var(--parchment-dark), 0 3px 0 rgba(36, 16, 4, 0.25);
+  cursor: pointer;
+}
+.px-btn:hover { background: #fff9e6; }
+.px-btn.primary { background: #e59a38; color: #2b1202; }
+.px-btn.green { background: #65b954; color: #0f290a; }
+
 .modal-mask {
   position: fixed;
   inset: 0;
-  background: rgba(20, 12, 6, 0.65);
+  background: rgba(20, 12, 6, 0.68);
   backdrop-filter: blur(4px);
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 120;
   padding: 16px;
 }
-
 .modal-mask.open { display: flex; }
 
-/* Light Novel Book Styling */
+/* Light Novel Library Reader */
 .novel-book {
   width: 100%;
   max-width: 680px;
-  max-height: 90vh;
+  max-height: 88vh;
   overflow-y: auto;
   background: #fcf7eb;
   color: #2a2118;
   border: 4px solid #59351c;
   border-radius: 8px;
-  box-shadow: inset 14px 0 24px -16px rgba(89, 53, 28, 0.35), 0 20px 50px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 14px 0 24px -16px rgba(89, 53, 28, 0.35), 0 20px 50px rgba(0, 0, 0, 0.55);
   position: relative;
-  padding: 34px 36px 28px;
-  font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+  padding: 32px 34px 26px;
+  font-family: "Noto Serif SC", "Songti SC", "STSong", Georgia, serif;
 }
-
 .novel-ribbon {
   position: absolute;
   top: 0;
   right: 34px;
-  width: 30px;
-  height: 54px;
+  width: 28px;
+  height: 52px;
   background: #b83227;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
 }
-
-.novel-vol {
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: #8c6d4f;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.novel-title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #1f160e;
-  border-bottom: 2px solid #d9ccb4;
-  padding-bottom: 12px;
-  margin-bottom: 18px;
-}
-
+.novel-vol { font-size: 12px; letter-spacing: 2px; color: #8c6d4f; margin-bottom: 6px; }
+.novel-title { font-size: 25px; font-weight: 700; border-bottom: 2px solid #d9ccb4; padding-bottom: 12px; margin-bottom: 16px; }
 .novel-meta-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  background: #f4ecdb;
-  border: 1px solid #dfd3bc;
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-bottom: 18px;
-  font-size: 14px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  background: #f4ecdb; border: 1px solid #dfd3bc; border-radius: 6px;
+  padding: 12px 16px; margin-bottom: 16px; font-size: 13.5px;
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
 }
-
 .novel-section-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #5c3a1e;
-  margin: 16px 0 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  font-size: 14.5px; font-weight: 700; color: #5c3a1e; margin: 14px 0 8px;
+  display: flex; justify-content: space-between; align-items: center;
 }
-
 .novel-textarea {
-  width: 100%;
-  min-height: 140px;
-  padding: 14px 16px;
-  border: 1px solid #d8cbb3;
-  border-radius: 6px;
-  background: #fffdf7;
-  color: #2a2118;
-  font-family: "Noto Serif SC", "Songti SC", Georgia, serif;
-  font-size: 15px;
-  line-height: 1.9;
-  resize: vertical;
-  outline: none;
+  width: 100%; min-height: 145px; padding: 14px 16px;
+  border: 1px solid #d8cbb3; border-radius: 6px; background: #fffdf7; color: #2a2118;
+  font-family: "Noto Serif SC", "Songti SC", Georgia, serif; font-size: 15px; line-height: 1.9;
+  resize: vertical; outline: none;
 }
-.novel-textarea:focus { border-color: #9e531b; }
-
 .novel-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-  padding-top: 14px;
-  border-top: 1px dashed #d8cbb3;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  margin-top: 18px; padding-top: 14px; border-top: 1px dashed #d8cbb3;
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
-/* Import & Add Course Modals */
-.dialog-box {
-  width: 100%;
-  max-width: 640px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 22px 24px;
-}
-
+/* Dialog Box */
+.dialog-box { width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto; padding: 22px 24px; }
 .dialog-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 2px dashed var(--wood-light);
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px dashed var(--wood-light);
 }
-
-.tab-row {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-
+.tab-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
 .tab-btn {
-  padding: 6px 12px;
-  font-size: 12.5px;
-  font-weight: 700;
-  border: 2px solid var(--wood-dark);
-  border-radius: 4px;
-  background: var(--parchment-dark);
-  color: var(--ink);
-  cursor: pointer;
+  padding: 6px 12px; font-size: 12.5px; font-weight: 800;
+  border: 2px solid var(--wood-dark); border-radius: 4px;
+  background: var(--parchment-dark); color: var(--ink); cursor: pointer;
 }
-.tab-btn.active {
-  background: var(--wood-mid);
-  color: #fff6dc;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.field label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
+.tab-btn.active { background: var(--wood-mid); color: #fff6dc; }
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 4px; }
 .field input, .field select, .field textarea {
-  width: 100%;
-  padding: 8px 10px;
-  border: 2px solid var(--wood-dark);
-  border-radius: 4px;
-  background: var(--parchment-light);
-  color: var(--ink);
-  font-size: 13px;
+  width: 100%; padding: 8px 10px; border: 2px solid var(--wood-dark); border-radius: 4px;
+  background: var(--parchment-light); color: var(--ink); font-size: 13px;
 }
-
 .prompt-box {
-  background: var(--parchment-dark);
-  border: 2px solid var(--wood-mid);
-  border-radius: 4px;
-  padding: 10px 12px;
-  font-size: 12px;
-  line-height: 1.6;
-  margin-bottom: 10px;
-  white-space: pre-wrap;
+  background: var(--parchment-dark); border: 2px solid var(--wood-mid); border-radius: 4px;
+  padding: 10px 12px; font-size: 12px; line-height: 1.6; margin-bottom: 10px; white-space: pre-wrap;
 }
 
 .toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--wood-dark);
-  color: #fff3d1;
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: 3px solid var(--wood-light);
-  font-size: 13px;
-  font-weight: 700;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.25s;
-  z-index: 200;
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-16px);
+  background: var(--wood-dark); color: #fff3d1; padding: 9px 18px; border-radius: 6px;
+  border: 3px solid var(--wood-light); font-size: 13px; font-weight: 800;
+  opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 250;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 @media (max-width: 720px) {
-  .novel-book { padding: 26px 20px; }
+  .novel-book { padding: 24px 18px; }
   .novel-meta-grid, .form-grid { grid-template-columns: 1fr; }
+  .hot-slot { min-width: 64px; font-size: 10px; }
 }
