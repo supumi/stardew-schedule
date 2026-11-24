@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StardewSchedule · 谷物课表（星露谷风 · 零广告 · 轻小说笔记）</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body data-season="spring" data-theme="stardew">
+  <canvas id="seasonCanvas"></canvas>
+
+  <div class="app-shell">
+    <!-- TOP BAR & STARDEW HUD -->
+    <header class="wood-panel top-bar">
+      <div class="brand-area">
+        <img src="./icon.svg" class="brand-icon" alt="StardewSchedule" />
+        <div class="brand-title">
+          <h1>StardewSchedule · 谷物课表</h1>
+          <p>零广告 · 星露谷像素农场 × 轻小说文库课程笔记 · 极简导入</p>
+        </div>
+      </div>
+
+      <div class="hud-box">
+        <div class="hud-stat">
+          <span id="hudSeasonIcon"></span>
+          <span id="hudDate">第 1 周 · 周一</span>
+        </div>
+        <div class="hud-stat">
+          <span id="hudClock">08:00</span>
+        </div>
+        <div class="hud-stat">
+          <span style="color:#d97706;">G</span>
+          <span class="gold-num" id="hudGold">150</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- TOOLBAR -->
+    <section class="wood-panel toolbar">
+      <div class="tool-group">
+        <button class="px-btn" onclick="changeWeek(-1)">◀ 上周</button>
+        <select class="px-select" id="weekSelect" onchange="setWeek(parseInt(this.value,10))"></select>
+        <button class="px-btn" onclick="changeWeek(1)">下周 ▶</button>
+      </div>
+
+      <div class="tool-group">
+        <select class="px-select" id="seasonSelect" onchange="setSeason(this.value)" title="切换星露谷季节">
+          <option value="spring">🌸 春季 · 防风草</option>
+          <option value="summer">☀️ 夏季 · 杨桃</option>
+          <option value="fall">🍁 秋季 · 南瓜</option>
+          <option value="winter">❄️ 冬季 · 水晶果</option>
+        </select>
+
+        <select class="px-select" id="themeSelect" onchange="setTheme(this.value)" title="自定义界面风格">
+          <option value="stardew">🏡 风格：星露谷物语</option>
+          <option value="novel">📖 风格：轻小说文库</option>
+          <option value="night">🌙 风格：星露谷矿洞暗夜</option>
+        </select>
+
+        <button class="px-btn" id="sfxBtn" onclick="toggleSfx()">🔊 音效: 开</button>
+        <button class="px-btn primary" onclick="openImportModal()">📥 极简导入课表</button>
+        <button class="px-btn green" onclick="openCourseModal()">＋ 添加课程</button>
+      </div>
+    </section>
+
+    <!-- FARM HARVEST PROGRESS -->
+    <section class="wood-panel farm-bar">
+      <div class="farm-crops">
+        <span id="farmStageIcon"></span>
+        <strong id="farmStageText">本周农田成长：发芽期（点开任意课程「打卡收获」赚 +50G）</strong>
+      </div>
+      <div class="farm-crops">
+        <div class="progress-track"><div class="progress-fill" id="farmProgress" style="width: 30%;"></div></div>
+        <span id="farmCount" style="font-weight:800;">0 / 0 节</span>
+      </div>
+    </section>
+
+    <!-- MAIN SCHEDULE GRID -->
+    <main class="wood-panel board-wrap">
+      <div class="schedule-grid" id="scheduleGrid"></div>
+    </main>
+  </div>
+
+  <!-- ================= LIGHT NOVEL LIBRARY COURSE READER MODAL ================= -->
+  <div class="modal-mask" id="novelModal" onclick="if(event.target===this) closeModal('novelModal')">
+    <div class="novel-book">
+      <div class="novel-ribbon"></div>
+      <div class="novel-vol" id="nvVol">VOLUME 01 · 课程手记</div>
+      <h2 class="novel-title" id="nvTitle">高等数学</h2>
+
+      <div class="novel-meta-grid" id="nvMeta"></div>
+
+      <div class="novel-section-title">
+        <span>📖 课堂手记 &amp; 作业 DDL（自动保存）</span>
+        <div style="display:flex;gap:6px;">
+          <button class="px-btn" style="padding:3px 8px;font-size:11px;" onclick="setNovelFont(14)">小</button>
+          <button class="px-btn" style="padding:3px 8px;font-size:11px;" onclick="setNovelFont(16)">中</button>
+          <button class="px-btn" style="padding:3px 8px;font-size:11px;" onclick="setNovelFont(18)">大</button>
+        </div>
+      </div>
+      <textarea class="novel-textarea" id="nvNote" placeholder="像写轻小说一样记录这门课的重点、老师划的考题、作业截止日期...（输入即自动保存在本地）"></textarea>
+
+      <div class="novel-actions">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="px-btn green" id="nvHarvestBtn" onclick="harvestCurrentCourse()">🌾 上完打卡 (+50G)</button>
+          <button class="px-btn" onclick="editCurrentCourse()">✏️ 编辑课程</button>
+          <button class="px-btn" style="color:#b91c1c;" onclick="deleteCurrentCourse()">🗑️ 删除</button>
+        </div>
+        <button class="px-btn primary" onclick="closeModal('novelModal')">合上书本</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 3-IN-1 ZERO-FRICTION IMPORT MODAL ================= -->
+  <div class="modal-mask" id="importModal" onclick="if(event.target===this) closeModal('importModal')">
+    <div class="wood-panel dialog-box">
+      <div class="dialog-head">
+        <h3>📥 3 种极简导入课表（无需对接教务系统）</h3>
+        <button class="px-btn" onclick="closeModal('importModal')">✕</button>
+      </div>
+
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchImportTab('ai', this)">🤖 AI 截图一键导入（推荐）</button>
+        <button class="tab-btn" onclick="switchImportTab('text', this)">📝 纯文本秒解析</button>
+        <button class="tab-btn" onclick="switchImportTab('file', this)">📂 ICS / JSON 导入导出</button>
+      </div>
+
+      <!-- Tab 1: AI Screenshot -->
+      <div id="imp-ai" class="imp-pane">
+        <p style="font-size:12.5px;margin-bottom:8px;">
+          <b>全高校 100% 通用！</b> 只需 2 步：① 点击下方按钮复制提示词，连同你的课表截图发给任意免费 AI（豆包 / DeepSeek / Kimi / ChatGPT）；② 把 AI 回复的 JSON 粘贴到下面，点击一键导入！
+        </p>
+        <div class="prompt-box" id="aiPromptText">请识别这张大学课程表截图，只输出纯 JSON 数组（不要解释文字），格式如下：
+[{"name":"高等数学","day":1,"start":1,"end":2,"room":"教三201","teacher":"王老师","weeks":"1-16","note":""}]
+说明：day 为 1-7（周一到周日），start/end 为起止节次（1-12），weeks 如 "1-16" 或 "1-16单" 或 "2-16双"。</div>
+        <button class="px-btn" style="margin-bottom:10px;" onclick="copyAiPrompt()">📋 一键复制 AI 识图提示词</button>
+        <div class="field" style="margin-bottom:12px;">
+          <label>粘贴 AI 返回的 JSON：</label>
+          <textarea id="aiJsonInput" rows="5" placeholder='[{"name":"高等数学","day":1,"start":1,"end":2,"room":"教三201","teacher":"王老师","weeks":"1-16"}]'></textarea>
+        </div>
+        <button class="px-btn primary" onclick="importFromJsonText()">⚡ 一键生成星露谷课表</button>
+      </div>
+
+      <!-- Tab 2: Plain Text Smart Parser -->
+      <div id="imp-text" class="imp-pane" style="display:none;">
+        <p style="font-size:12.5px;margin-bottom:8px;">
+          不联网也能用！每行一门课，支持口语或教务复制文本，例如：<br/>
+          <code>周一 1-2节 高等数学 教三201 王教授 1-16周</code>
+        </p>
+        <div class="field" style="margin-bottom:12px;">
+          <textarea id="plainTextInput" rows="6" placeholder="周一 1-2节 高等数学 教三201 王教授 1-16周&#10;周三 3-4节 大学英语 外语楼305 李老师 1-16周(单)&#10;周五 5-6节 Python程序设计 机房A202 张老师 1-14周"></textarea>
+        </div>
+        <button class="px-btn primary" onclick="importFromPlainText()">⚡ 智能解析并导入</button>
+      </div>
+
+      <!-- Tab 3: ICS & JSON File -->
+      <div id="imp-file" class="imp-pane" style="display:none;">
+        <p style="font-size:12.5px;margin-bottom:12px;">支持导入从 WakeUp / 教务系统导出的 <code>.ics</code> 日历文件，或本应用导出的 <code>.json</code> 备份文件。</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+          <label class="px-btn primary" style="cursor:pointer;">
+            📂 选择 .ics / .json 文件导入
+            <input type="file" id="fileImportInput" accept=".ics,.json" hidden onchange="importFromFile(this)" />
+          </label>
+          <button class="px-btn" onclick="exportBackupJson()">💾 导出当前课表备份 (.json)</button>
+        </div>
+        <button class="px-btn" style="color:#b91c1c;" onclick="resetDemoData()">🔄 恢复示例课表</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ADD / EDIT COURSE MODAL ================= -->
+  <div class="modal-mask" id="courseModal" onclick="if(event.target===this) closeModal('courseModal')">
+    <div class="wood-panel dialog-box">
+      <div class="dialog-head">
+        <h3 id="courseModalTitle">＋ 添加新课程</h3>
+        <button class="px-btn" onclick="closeModal('courseModal')">✕</button>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>课程名称 *</label><input id="fName" placeholder="例如：高等数学" /></div>
+        <div class="field"><label>上课地点</label><input id="fRoom" placeholder="例如：教三 201" /></div>
+        <div class="field"><label>星期</label>
+          <select id="fDay">
+            <option value="1">周一</option><option value="2">周二</option><option value="3">周三</option>
+            <option value="4">周四</option><option value="5">周五</option><option value="6">周六</option><option value="7">周日</option>
+          </select>
+        </div>
+        <div class="field"><label>节次（起 - 止）</label>
+          <div style="display:flex;gap:6px;">
+            <input type="number" id="fStart" min="1" max="12" value="1" />
+            <input type="number" id="fEnd" min="1" max="12" value="2" />
+          </div>
+        </div>
+        <div class="field"><label>授课老师</label><input id="fTeacher" placeholder="例如：王教授" /></div>
+        <div class="field"><label>上课周次</label><input id="fWeeks" value="1-16" placeholder="如 1-16 或 1-16单" /></div>
+        <div class="field"><label>作物徽章</label>
+          <select id="fCrop">
+            <option value="parsnip">防风草</option>
+            <option value="strawberry">草莓</option>
+            <option value="starfruit">杨桃</option>
+            <option value="pumpkin">南瓜</option>
+            <option value="crystal">水晶果</option>
+            <option value="coffee">咖啡豆</option>
+          </select>
+        </div>
+        <div class="field"><label>卡片配色</label>
+          <select id="fColor">
+            <option value="#f9d88b">暖麦黄</option>
+            <option value="#b8e3a8">农场绿</option>
+            <option value="#f5b8b8">草莓粉</option>
+            <option value="#b5daf5">晴空蓝</option>
+            <option value="#d8c0f5">水晶紫</option>
+            <option value="#f7c59f">南瓜橙</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button class="px-btn" onclick="closeModal('courseModal')">取消</button>
+        <button class="px-btn primary" onclick="saveCourseForm()">💾 保存课程</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

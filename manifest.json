@@ -1,0 +1,16 @@
+{
+  "name": "StardewSchedule · 谷物课表",
+  "short_name": "谷物课表",
+  "description": "零广告、可自定义风格的星露谷像素风大学课程表（含轻小说文库课程笔记页）",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f6dea6",
+  "theme_color": "#8b4513",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
